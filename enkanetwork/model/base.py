@@ -11,6 +11,7 @@ from typing import Any
 
 __all__ = ("EnkaNetworkResponse",)
 
+
 class EnkaNetworkInfo(BaseModel):
     """ Enka.Network response data
 
@@ -27,6 +28,7 @@ class EnkaNetworkInfo(BaseModel):
     url: str = ""
     path: str = ""
 
+
 class EnkaNetworkResponse(BaseModel):
     """ Enka.Network response data
 
@@ -39,7 +41,7 @@ class EnkaNetworkResponse(BaseModel):
     profile: :class:`EnkaNetworkInfo`
         profile enka.network. Please refers in `EnkaNetworkInfo` class
     owner: :class:`ProfileOwner`
-        Owner UID data. **subscriptions in Enka.Network**. Please refers in `ProfileOwner` class 
+        Owner UID data. **subscriptions in Enka.Network**. Please refers in `ProfileOwner` class
     ttl: :class:`int`
         Cache timeout
     uid: :class:`int`
@@ -58,6 +60,7 @@ class EnkaNetworkResponse(BaseModel):
         self.profile.path = f"/u/{data.get('uid')}"
         self.profile.url = BASE_URL.format(PATH=self.profile.path[1:])
         self.profile.uid = data.get("uid") or ""
+
 
 class EnkaNetworkProfileResponse(BaseModel):
     username: str

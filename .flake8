@@ -1,0 +1,9 @@
+[flake8]
+max-line-length = 123
+exclude = .git,__pycache__,old,build,dist,functionbeat,assembly,.vscode,resources
+max-complexity = 15
+extend-ignore =
+    # H202: assertRaises Exception too broad
+    H202,
+    # E203: Pep8 ignore [:] in arrays
+    E203,

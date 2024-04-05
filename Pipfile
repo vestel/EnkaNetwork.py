@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pydantic = ">=2.6"
+aiohttp = ">=3.9"
+cachetools = ">=5.3"
+
+
+[dev-packages]
+flake8 = "*"
+pytest = "*"
+
+[requires]
+python_version = "3.9"

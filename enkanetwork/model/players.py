@@ -17,6 +17,7 @@ __all__ = (
     'PlayerInfo'
 )
 
+
 class ProfilePicture(BaseModel):
     """
         API Response data
@@ -50,7 +51,7 @@ class showAvatar(BaseModel):
     """
         API Response data
     """
-    id: str = Field(0, alias="avatarId")
+    id: int = Field(0, alias="avatarId")
     level: int = 1
 
     """
@@ -100,7 +101,7 @@ class Namecard(BaseModel):
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
 
-        if self.id > 0:
+        if self.id != 0:
             LOGGER.debug("=== Namecard ===")
             # Get name card
             namecard = Assets.namecards(str(self.id))

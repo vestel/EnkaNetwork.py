@@ -32,7 +32,7 @@ class NamecardAsset(BaseModel):
     """
 
     id: int = 0
-    hash_id: str = Field("", alias="nameTextMapHash")
+    hash_id: int = Field("", alias="nameTextMapHash")
     icon: IconAsset
     banner: IconAsset
     navbar: IconAsset
@@ -74,7 +74,7 @@ class CharacterSkillAsset(BaseModel):
     """
     id: int = 0,
     pround_map: int = 0,
-    hash_id: str = Field("", alias="nameTextMapHash")
+    hash_id: int = Field("", alias="nameTextMapHash")
     icon: IconAsset = None
 
 
@@ -91,7 +91,7 @@ class CharacterConstellationsAsset(BaseModel):
         A icon assets. Please refers in `IconAsset` class
     """
     id: int = 0
-    hash_id: str = Field("", alias="nameTextMapHash")
+    hash_id: int = Field("", alias="nameTextMapHash")
     icon: IconAsset = None
 
 
@@ -110,11 +110,12 @@ class CharacterCostume(BaseModel):
     id: int = 0
     images: CharacterIconAsset = None
 
+
 class AritfactProps(BaseModel):
     id: int = 0
     type: str = Field('', alias='propType')
     digit: str = Field('DIGIT', alias='propDigit')
-    value: int = Field(0, alias='propValue')
+    value: float = Field(0, alias='propValue')
 
 
 class CharacterAsset(BaseModel):
@@ -126,7 +127,7 @@ class CharacterAsset(BaseModel):
         Avatar ID
     rarity: :class:`int`
         Character rarity (5 stars or 4stars)
-    hash_id: :class:`str`
+    hash_id: :class:`int`
         Character hash id
     element: :class:`ElementType`
         Character element type
@@ -141,7 +142,7 @@ class CharacterAsset(BaseModel):
     """
     id: int = 0
     rarity: int = 0
-    hash_id: str = Field("", alias="nameTextMapHash")
+    hash_id: int = Field("", alias="nameTextMapHash")
     element: ElementType = ElementType.Unknown
     images: CharacterIconAsset = None
     skill_id: int = 0

@@ -77,13 +77,13 @@ class CharacterInfo(BaseModel):
         self.ascension = int(data["propMap"]["1002"].get("ival", 0)) if "1002" in data["propMap"] else 0
         self.level = int(data["propMap"]["4001"].get("ival", 0)) if "4001" in data["propMap"] else 0
 
-        # Constellation unlocked count
+        # # Constellation unlocked count
         self.constellations_unlocked = len(data["talentIdList"]) if "talentIdList" in data else 0
 
-        # Get max character level
+        # # Get max character level
         self.max_level = (self.ascension * 10) + (10 if self.ascension > 0 else 0) + 20
 
-        # Get character
+        # # Get character
         LOGGER.debug("=== Character Data ===")
         avatarId = str(data["avatarId"])
         avatarId += f"-{data['skillDepotId']}" if data["avatarId"] in [10000005, 10000007] else ""
@@ -149,7 +149,7 @@ class CharacterInfo(BaseModel):
             if "proudSkillExtraLevelMap" in data:
                 boost_level = data["proudSkillExtraLevelMap"].get(str(_skill.pround_map), None)
                 if not boost_level is None:
-                    _is_boosted = True 
+                    _is_boosted = True
                     _lvl += boost_level
 
             self.skills.append(CharacterSkill(

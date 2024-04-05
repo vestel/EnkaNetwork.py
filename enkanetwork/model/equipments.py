@@ -67,16 +67,16 @@ class EquipmentsDetail(BaseModel):
             self.artifact_type = EquipType(data["equipType"])
             # Sub Stats
             for stats in data["reliquarySubstats"] if "reliquarySubstats" in data else []:
-                self.substats.append(EquipmentsStats.parse_obj(stats))
+                self.substats.append(EquipmentsStats.model_validate(stats))
 
         if data["itemType"] == "ITEM_WEAPON":  # AKA. Weapon
             LOGGER.debug("=== Weapon ===")
 
             # Main and Sub Stats
-            self.mainstats = EquipmentsStats.parse_obj(
+            self.mainstats = EquipmentsStats.model_validate(
                 data["weaponStats"][0])
             for stats in data["weaponStats"][1:]:
-                self.substats.append(EquipmentsStats.parse_obj(stats))
+                self.substats.append(EquipmentsStats.model_validate(stats))
 
         _name = Assets.get_hash_map(data.get("nameTextMapHash"))
         if "setNameTextMapHash" in data:
@@ -88,13 +88,14 @@ class EquipmentsDetail(BaseModel):
     class Config:
         use_enum_values = True
 
+
 class EquipmentsProps(BaseModel):
     id: int = 0
     prop_id: str = ''
     name: str = ''
     digit: DigitType = DigitType.NUMBER
-    value: int = 0
-    
+    value: float = 0
+
     def __init__(self, **data: Any) -> None:
         super().__init__(**data)
         self.name = Assets.get_hash_map(self.prop_id)
@@ -105,6 +106,7 @@ class EquipmentsProps(BaseModel):
     def get_full_name(self):
         raw = self.value
         return f"{self.name}{str(raw) if raw < 0 else '+'+str(raw)}{'%' if self.digit == DigitType.PERCENT else ''}"
+
 
 class Equipments(BaseModel):
     """
@@ -138,7 +140,7 @@ class Equipments(BaseModel):
 
             for props in data["reliquary"].get("appendPropIdList", []):
                 props_info = Assets.artifact_props(props)
-                if props_info: 
+                if props_info:
                     self.props.append(EquipmentsProps(**{
                         "id": props_info.id,
                         "prop_id": props_info.type,
@@ -158,7 +160,6 @@ class Equipments(BaseModel):
                 self.ascension = data["weapon"]["promoteLevel"]
                 self.max_level = (self.ascension * 10) + (
                     10 if self.ascension > 0 else 0) + 20
-                
+
                 if self.ascension >= 2:
                     self.detail.icon = IconAsset(filename=self.detail.icon.filename + "_Awaken")
-            

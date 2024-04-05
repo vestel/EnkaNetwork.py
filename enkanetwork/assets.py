@@ -19,17 +19,17 @@ def check_assets(f: Callable):
     def decorator(*args):
         if not args[0].DATA or \
            not args[0].HASH_MAP:
-           args[0]._set_language("EN")
-           args[0].reload_assets()
-        
+            args[0]._set_language("EN")
+            args[0].reload_assets()
+
         return f(*args)
 
     return decorator
 
 
 class Assets:
-    DATA: Dict[str, dict] = {}
-    HASH_MAP: Dict[str, dict] = {}
+    DATA: Dict[int, dict] = {}
+    HASH_MAP: Dict[int, dict] = {}
     LANGS: Language = Language.EN
 
     def __init__(self, lang: Union[str, Language] = Language.EN) -> None:
@@ -65,7 +65,7 @@ class Assets:
             LOGGER.error(f"Character not found with id: {id}")
             return
 
-        return assets.CharacterAsset.parse_obj({
+        return assets.CharacterAsset.model_validate({
             "id": id if str(id).isdigit() else id.split("-")[0],
             "skill_id": str(id).split("-")[1] if not str(id).isdigit() else 0,
             "images": cls.create_character_icon(data["sideIconName"]),
@@ -80,10 +80,12 @@ class Assets:
             LOGGER.error(f"Costume not found with id: {id}")
             return
 
-        return assets.CharacterCostume.parse_obj({
-            "id": id,
-            "images": cls.create_chractar_costume_icon(data["sideIconName"])
-        })
+        return assets.CharacterCostume.model_validate(
+            {
+                "id": id,
+                "images": cls.create_character_costume_icon(data["sideIconName"]),
+            }
+        )
 
     @classmethod
     def constellations(cls, id: int) -> Optional[assets.CharacterConstellationsAsset]:
@@ -93,11 +95,9 @@ class Assets:
             LOGGER.error(f"Character constellations not found with id: {id}")
             return
 
-        return assets.CharacterConstellationsAsset.parse_obj({
-            "id": id,
-            **data,
-            "icon": utils.IconAsset(filename=data["icon"])
-        })
+        return assets.CharacterConstellationsAsset.model_validate(
+            {"id": id, **data, "icon": utils.IconAsset(filename=data["icon"])}
+        )
 
     @classmethod
     def skills(cls, id: int) -> Optional[assets.CharacterSkillAsset]:
@@ -108,9 +108,8 @@ class Assets:
             LOGGER.error(f"Character skills not found with id: {id}")
             return
 
-
         pround = data.get("proudSkillGroupId", 0)
-        return assets.CharacterSkillAsset.parse_obj({
+        return assets.CharacterSkillAsset.model_validate({
             "id": id,
             **data,
             "pround_map": pround if not pround is None and pround != "" else 0,
@@ -125,14 +124,14 @@ class Assets:
             LOGGER.error(f"Namecards not found with id: {id}")
             return
 
-        return assets.NamecardAsset.parse_obj({
+        return assets.NamecardAsset.model_validate({
             "id": id,
             **data,
             "icon": utils.IconAsset(filename=data["icon"]),
             "banner": utils.IconAsset(filename=data["picPath"][1]),
             "navbar": utils.IconAsset(filename=data["picPath"][0]),
         })
-    
+
     @classmethod
     def artifact_props(cls, id: int):
         LOGGER.debug(f"Getting artifact props assets with id: {id}")
@@ -140,8 +139,8 @@ class Assets:
         if not data:
             LOGGER.error(f"Artifact props not found with id: {id}")
             return
-        
-        return assets.AritfactProps.parse_obj({
+
+        return assets.AritfactProps.model_validate({
             "id": id,
             **data
         })
@@ -176,7 +175,7 @@ class Assets:
         )
 
     @classmethod
-    def create_chractar_costume_icon(cls, path: str) -> assets.CharacterIconAsset:  # noqa: E501
+    def create_character_costume_icon(cls, path: str) -> assets.CharacterIconAsset:  # noqa: E501
         _data = cls.create_character_icon(path)
         _data.banner = utils.IconAsset(filename=_data.banner.filename.replace("Gacha_AvatarImg", "Costume"))  # noqa: E501
         return _data
